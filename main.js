@@ -1,10 +1,6 @@
-const { greet } = wasm_bindgen;
-
-function runApp() {
-  greet('World');
-}
-
-// Load and instantiate the wasm file, and we specify the source of the wasm
-// file here. Once the returned promise is resolved we're ready to go and
-// use our imports.
-wasm_bindgen('./main_bg.wasm').then(runApp).catch(console.error);
+fetch('./main.wasm').then(response =>
+  response.arrayBuffer()
+).then(bytes => WebAssembly.instantiate(bytes)).then(results => {
+  instance = results.instance;
+  document.getElementById("container").textContent = instance.exports.add_one(41);
+}).catch(console.error);
